@@ -12,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from mkdocs.utils import yaml_load
 from os import path
+
+from mkdocs.utils import yaml_load
 
 
 class EditUrl:
