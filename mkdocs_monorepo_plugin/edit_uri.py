@@ -31,15 +31,23 @@ class EditUrl:
         return path.relpath(self.plugin.originalDocsDir, abs_root_config_file_dir)
 
     def __get_page_dir_alias(self):
+        if not self.page.url:
+            return None
         parts = self.page.url.split("/")
         while True:
             parts.pop()
-            alias = path.join(*parts)
+            try:
+                alias = path.join(*parts)
+            except TypeError:
+                return None
+
             if alias in self.plugin.aliases:
                 return alias
 
     def __get_page_docs_dir(self):
         alias = self.__get_page_dir_alias()
+        if not alias:
+            return self.config["docs_dir"]
         abs_root_config_file_dir = self.__get_root_config_file_path()
         abs_page_config_file_dir = self.plugin.aliases[alias]["docs_dir"]
         return path.relpath(abs_page_config_file_dir, abs_root_config_file_dir)
@@ -51,6 +59,8 @@ class EditUrl:
 
     def __get_page_config_file_path(self):
         alias = self.__get_page_dir_alias()
+        if not alias:
+            return self.config["config_file_path"]
         return self.plugin.aliases[alias]["yaml_file"]
 
     def __load_page_config_file(self, file):
